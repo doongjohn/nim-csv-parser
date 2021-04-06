@@ -1,0 +1,3 @@
+# Compiler flags
+
+--define:"ssl"
