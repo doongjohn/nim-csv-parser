@@ -3,13 +3,17 @@ import ../states
 import ../utils
 
 
+template onSuccessiveDelimiter =
+  if source.at(pos - 1) == ',':
+    csvObj.push("")
+
+
 proc onUpdate(source: string, pos: var int, csvObj: var CSVObject): State =
   case source[pos]
   of ' ':
     return stateWhitespace
   of ',':
-    if source.at(pos - 1) == ',':
-      csvObj.push("")
+    onSuccessiveDelimiter()
   of '\n':
     return stateNewLine
   else:
