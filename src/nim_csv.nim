@@ -1,5 +1,4 @@
 # TODO
-# - parse "" correctly
 # - do stuff better
 
 
@@ -15,8 +14,13 @@ proc main =
   let csvObj = parse source
   
   # print csv data
+  echo "\n---"
   for column in csvObj.data:
-    echo column
+    for i, row in column:
+      stdout.write "["
+      stdout.write row
+      stdout.write "] "
+    echo "\n---"
 
 
 main()

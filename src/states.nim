@@ -32,6 +32,7 @@ var contentRange* = 0 .. 0
 
 importState(
   states/content,
+  states/doublequotes,
   states/delimiter,
   states/newline,
   states/whitespace,
@@ -49,6 +50,8 @@ proc initState*(startState: State, source: string, pos: var int, csvObj: var CSV
 proc runState*(source: string, pos: var int, csvObj: var CSVObject) =
   while pos < source.len:
     let nextState = curState.onUpdate(source, pos, csvObj)
+    if nextState == stateEof:
+      return
     if nextState == nil or curState == nextState:
       continue
     (prevState, curState) = (curState, nextState)
@@ -60,3 +63,4 @@ proc endState*(source: string, pos: var int, csvObj: var CSVObject) =
   (prevState, curState) = (curState, stateEof)
   prevState.onExit(source, pos, csvObj)
   curState.onEnter(source, pos, csvObj)
+

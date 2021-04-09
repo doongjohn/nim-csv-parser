@@ -16,6 +16,8 @@ proc onUpdate(source: string, pos: var int, csvObj: var CSVObject): State =
     onSuccessiveDelimiter()
   of '\n':
     return stateNewLine
+  of '\"':
+    return stateDoubleQuotes
   else:
     return stateContent
   inc pos

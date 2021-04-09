@@ -22,6 +22,8 @@ proc onUpdate(source: string, pos: var int, csvObj: var CSVObject): State =
   of '\n':
     transitionToNotContent()
     return stateNewLine
+  of '\"':
+    return stateDoubleQuotes
   else:
     transitionToContent()
     return stateContent

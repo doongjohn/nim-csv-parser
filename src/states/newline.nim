@@ -4,7 +4,7 @@ import ../utils
 
 
 proc onExit(source: string, pos: var int, csvObj: var CSVObject) =
-  if pos != source.high and source.at(pos + 1) notin ['\0', '\n', ' ']:
+  if source.at(pos + 1) notin ['\0', '\n', ' ']:
     csvObj.addColumn()
 
 
@@ -16,6 +16,8 @@ proc onUpdate(source: string, pos: var int, csvObj: var CSVObject): State =
     return stateDelimiter
   of '\n':
     discard
+  of '"':
+    return stateDoubleQuotes
   else:
     return stateContent
   inc pos
