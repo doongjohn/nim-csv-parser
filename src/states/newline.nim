@@ -1,9 +1,10 @@
 import ../types
 import ../states
+import ../utils
 
 
-proc onEnter(source: string, pos: var int, csvObj: var CSVObject) =
-  if pos != source.high:
+proc onExit(source: string, pos: var int, csvObj: var CSVObject) =
+  if pos != source.high and source.at(pos + 1) notin ['\0', '\n', ' ']:
     csvObj.addColumn()
 
 
@@ -22,6 +23,6 @@ proc onUpdate(source: string, pos: var int, csvObj: var CSVObject): State =
 
 proc newStateNewline*: State =
   newState(
-    onEnter = onEnter,
+    onExit = onExit,
     onUpdate = onUpdate,
   )
