@@ -7,19 +7,18 @@ proc onEnter(source: string, pos: var int, csvObj: var CSVObject) =
     contentRange.a = pos
 
 
-proc onExit(source: string, pos: var int, csvObj: var CSVObject) =
-  contentRange.b = pos - 1
-  if curState != stateWhitespace:
-    csvObj.push(source[contentRange])
-
-
 proc onUpdate(source: string, pos: var int, csvObj: var CSVObject): State =
   case source[pos]
   of ' ':
+    contentRange.b = pos - 1
     return stateWhitespace
   of ',':
+    contentRange.b = pos - 1
+    csvObj.push(source[contentRange])
     return stateDelimiter
   of '\n':
+    contentRange.b = pos - 1
+    csvObj.push(source[contentRange])
     return stateNewLine
   else:
     discard
@@ -29,6 +28,6 @@ proc onUpdate(source: string, pos: var int, csvObj: var CSVObject): State =
 proc newStateContent*: State =
   newState(
     onEnter = onEnter,
-    onExit = onExit,
     onUpdate = onUpdate,
   )
+

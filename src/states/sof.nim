@@ -1,11 +1,5 @@
 import ../types
 import ../states
-import ../utils
-
-
-proc onExit(source: string, pos: var int, csvObj: var CSVObject) =
-  if source.at(pos + 1) notin ['\0', '\n']:
-    csvObj.addColumn()
 
 
 proc onUpdate(source: string, pos: var int, csvObj: var CSVObject): State =
@@ -17,13 +11,13 @@ proc onUpdate(source: string, pos: var int, csvObj: var CSVObject): State =
   of '\"':
     return stateDoubleQuotes
   else:
+    contentRange.a = pos
     return stateContent
   inc pos
 
 
-proc newStateNewline*: State =
+proc newStateSof*: State =
   newState(
-    onExit = onExit,
     onUpdate = onUpdate,
   )
 

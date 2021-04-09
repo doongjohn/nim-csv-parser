@@ -7,7 +7,7 @@ proc parse*(source: string): CSVObject =
     csvObj = newCSVObject()
     pos = 0
 
-  initState(stateWhiteSpace, source, pos, csvObj)
+  initState(source, pos, csvObj)
   runState(source, pos, csvObj)
   endState(source, pos, csvObj)
 

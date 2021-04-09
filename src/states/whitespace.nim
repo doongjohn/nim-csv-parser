@@ -16,12 +16,12 @@ proc onUpdate(source: string, pos: var int, csvObj: var CSVObject): State =
   case source[pos]
   of ' ':
     discard
-  of ',':
-    transitionToNotContent()
-    return stateDelimiter
   of '\n':
     transitionToNotContent()
     return stateNewLine
+  of ',':
+    transitionToNotContent()
+    return stateDelimiter
   of '\"':
     return stateDoubleQuotes
   else:
@@ -34,3 +34,4 @@ proc newStateWhitespace*: State =
   newState(
     onUpdate = onUpdate,
   )
+

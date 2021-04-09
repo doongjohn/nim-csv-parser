@@ -36,14 +36,15 @@ importState(
   states/delimiter,
   states/newline,
   states/whitespace,
+  states/sof,
   states/eof,
 )
 
 
 # state functions
-proc initState*(startState: State, source: string, pos: var int, csvObj: var CSVObject) =
-  curState = startState
-  prevState = startState
+proc initState*(source: string, pos: var int, csvObj: var CSVObject) =
+  curState = stateSof
+  prevState = stateSof
   curState.onEnter(source, pos, csvObj)
 
 
