@@ -3,10 +3,12 @@ import states
 
 
 proc parse*(source: string): CSVObject =
-  var csvObj = newCSVObject()
-  var pos = 0
+  var
+    csvObj = newCSVObject()
+    pos = 0
+
   initState(stateWhiteSpace, source, pos, csvObj)
-  while pos < source.len:
-    runState(source, pos, csvObj)
-  finishState(source, pos, csvObj)
+  runState(source, pos, csvObj)
+  endState(source, pos, csvObj)
+
   return csvObj
