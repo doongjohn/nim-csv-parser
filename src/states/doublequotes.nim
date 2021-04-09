@@ -4,6 +4,9 @@ import ../states
 import ../utils
 
 
+var enterPos = 0
+
+
 template onDoubleQuotesFound =
   if source.at(pos + 1) == '\"':
     # escape doublequotes
@@ -18,6 +21,7 @@ template onDoubleQuotesFound =
   
 
 proc onEnter(source: string, pos: var int, csvObj: var CSVObject) =
+  enterPos = pos
   inc pos
   contentRange.a = pos
 
@@ -27,7 +31,10 @@ proc onUpdate(source: string, pos: var int, csvObj: var CSVObject): State =
   of '\"':
     onDoubleQuotesFound()
   else:
-    discard
+    # check error
+    if pos == source.high:
+      echo "unclosed double quotes at " & $enterPos
+      # maybe abort here?
   inc pos
 
 
