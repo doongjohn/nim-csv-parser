@@ -42,13 +42,21 @@ importState(
 
 
 # state functions
-proc initState*(source: string, pos: var int, csvObj: var CSVObject) =
+proc initState(source: string, pos: var int, csvObj: var CSVObject) =
   curState = stateSof
   prevState = stateSof
   curState.onEnter(source, pos, csvObj)
 
 
+proc endState(source: string, pos: var int, csvObj: var CSVObject) =
+  (prevState, curState) = (curState, stateEof)
+  prevState.onExit(source, pos, csvObj)
+  curState.onEnter(source, pos, csvObj)
+
+
 proc runState*(source: string, pos: var int, csvObj: var CSVObject) =
+  initState(source, pos, csvObj)
+
   while pos < source.len:
     let nextState = curState.onUpdate(source, pos, csvObj)
     if nextState == stateEof:
@@ -59,9 +67,5 @@ proc runState*(source: string, pos: var int, csvObj: var CSVObject) =
     prevState.onExit(source, pos, csvObj)
     curState.onEnter(source, pos, csvObj)
 
-
-proc endState*(source: string, pos: var int, csvObj: var CSVObject) =
-  (prevState, curState) = (curState, stateEof)
-  prevState.onExit(source, pos, csvObj)
-  curState.onEnter(source, pos, csvObj)
+  endState(source, pos, csvObj)
 
