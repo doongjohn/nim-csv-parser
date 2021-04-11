@@ -14,13 +14,15 @@ template onDoubleQuotesFound =
   else:
     # push content
     contentRange.b = pos - 1
-    csvObj.push(source[contentRange].replace("\"\"", "\""))
+    let formatted = source[contentRange].replace("\"\"", "\"")
+    csvObj.push(formatted)
+
     # next state
     inc pos, 1
-    return if pos > source.high:
-      stateEof
+    if pos > source.high:
+      return stateEof
     else:
-      stateWhitespace
+      return stateWhitespace
   
 
 proc onEnter(source: string, pos: var int, csvObj: var CSVObject) =
