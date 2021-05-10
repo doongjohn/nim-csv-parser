@@ -31,32 +31,24 @@ var prevState*: State
 var contentRange* = 0 .. 0
 
 importState(
+  states/sof,
+  states/eof,
   states/content,
   states/doublequotes,
   states/delimiter,
   states/newline,
   states/whitespace,
-  states/sof,
-  states/eof,
 )
 
 
-# state functions
-proc initState(source: string, pos: var int, csvObj: var CSVObject) =
+# state function
+proc runState*(source: string, pos: var int, csvObj: var CSVObject) =
+  # state init
   curState = stateSof
   prevState = stateSof
   curState.onEnter(source, pos, csvObj)
 
-
-proc endState(source: string, pos: var int, csvObj: var CSVObject) =
-  (prevState, curState) = (curState, stateEof)
-  prevState.onExit(source, pos, csvObj)
-  curState.onEnter(source, pos, csvObj)
-
-
-proc runState*(source: string, pos: var int, csvObj: var CSVObject) =
-  initState(source, pos, csvObj)
-
+  # state loop
   while pos < source.len:
     let nextState = curState.onUpdate(source, pos, csvObj)
     if nextState == stateEof:
@@ -67,5 +59,9 @@ proc runState*(source: string, pos: var int, csvObj: var CSVObject) =
     prevState.onExit(source, pos, csvObj)
     curState.onEnter(source, pos, csvObj)
 
-  endState(source, pos, csvObj)
+  # state end
+  (prevState, curState) = (curState, stateEof)
+  prevState.onExit(source, pos, csvObj)
+  curState.onEnter(source, pos, csvObj)
+
 
